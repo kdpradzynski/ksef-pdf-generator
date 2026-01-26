@@ -23,6 +23,12 @@ Biblioteka do generowania wizualizacji PDF faktur oraz UPO na podstawie plików 
    cd ksef-pdf-generator
    ```
 
+## 2.2 Uruchomienie serwera REST
+1. Uruchom aplikację:
+```bash
+   PORT=<port> X_API_KEY=<x-api-key> npx vite-node src/server.ts
+```
+
 3. Zainstaluj zależności:
    ```bash
    npm install
