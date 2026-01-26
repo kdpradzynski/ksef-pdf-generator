@@ -1,4 +1,4 @@
-import { generateInvoice } from './generate-invoice';
-import { generatePDFUPO } from './UPO-generator';
+import { generateInvoice, generateInvoiceString } from './generate-invoice';
+import { generatePDFUPO, generatePDFUPOString } from './UPO-4_2-generators';
 
-export { generateInvoice, generatePDFUPO };
+export { generateInvoice, generateInvoiceString, generatePDFUPO, generatePDFUPOString };
