@@ -10,6 +10,7 @@ import {
   generateTwoColumns,
   getContentTable,
   getTable,
+  makeBreakable,
   verticalSpacing,
 } from '../../../shared/PDF-functions';
 import { HeaderDefine } from '../../../shared/types/pdf-types';
@@ -31,7 +32,22 @@ export function generateStopka(
   const wzty: Content[] = generateWZ(wz);
   const rejestry: Content[] = generateRejestry(stopka);
   const informacje: Content[] = generateInformacje(stopka);
-  const qrCode: Content[] = generateQRCodeData(additionalData);
+  // const qrCode: Content[] = generateQRCodeData(additionalData);
+  const invoiceVarificationHint =
+    'Nie możesz zeskanować kodu z obrazka? Kliknij w link weryfikacyjny i przejdź do weryfikacji faktury!';
+  const fakturaQrCodeSection: Content[] = generateQRCodeSectionData(
+    additionalData?.encodedFakturaURL,
+    additionalData?.nrKSeF ?? 'OFFLINE',
+    invoiceVarificationHint,
+    additionalData?.nrKSeF ? 'Sprawdź, czy Twoja faktura znajduje się w KSeF!' : undefined
+  );
+
+  const certyfikatQrCodeSection: Content[] = generateQRCodeSectionData(
+    additionalData?.encodedCertyfikatURL,
+    'CERTYFIKAT',
+    'Nie możesz zeskanować kodu z obrazka? Kliknij w link weryfikacyjny i przejdź do weryfikacji certyfikatu!'
+  );
+
   const zalaczniki: Content[] = !additionalData?.isMobile ? generateZalaczniki(zalacznik) : [];
 
   const result: Content = [
@@ -42,7 +58,9 @@ export function generateStopka(
     ...rejestry,
     ...informacje,
     ...(zalaczniki.length ? zalaczniki : []),
-    { stack: [...qrCode], unbreakable: true },
+    // { stack: [...qrCode], unbreakable: true },
+    { stack: [...fakturaQrCodeSection], unbreakable: true },
+    { stack: [...certyfikatQrCodeSection], unbreakable: true },
     createSection(
       [
         {
@@ -160,6 +178,60 @@ function generateQRCodeData(additionalData?: AdditionalDataTypes): Content[] {
         ],
       });
     }
+  }
+  return createSection(result, true);
+}
+
+function generateQRCodeSectionData(
+  encodedQrCodeLink: string | undefined,
+  qrCodeLabel: string | undefined,
+  qrCodeLinkLabel: string,
+  headerLabel?: string
+): Content[] {
+  const result: Content = [];
+
+  if (!encodedQrCodeLink) {
+    return createSection(result, true);
+  }
+
+  const qrCodeLink = atob(encodedQrCodeLink);
+  const qrCode: ContentQr | undefined = generateQRCode(qrCodeLink);
+
+  if (qrCode && qrCodeLabel) {
+    const fit = qrCode.fit ?? 120;
+
+    if (headerLabel) {
+      result.push(createHeader(headerLabel));
+    } else {
+      result.push(createHeader('', [0, 8, 0, 0]));
+    }
+    result.push({
+      columns: [
+        {
+          stack: [
+            qrCode,
+            {
+              stack: [formatText(qrCodeLabel, FormatTyp.Default)],
+              width: 'auto',
+              alignment: 'center',
+              marginRight: Math.max(0, fit / 10 - qrCodeLabel.length),
+              marginTop: 10,
+              fontSize: qrCodeLabel.length <= 10 ? 14 : 10,
+            } as ContentStack,
+          ],
+          width: 10 + fit,
+        } as ContentStack,
+        {
+          stack: [
+            formatText(qrCodeLinkLabel, FormatTyp.Value),
+            { stack: [formatText(makeBreakable(qrCodeLink), FormatTyp.Link)], marginTop: 5 },
+          ],
+          link: qrCodeLink,
+          margin: [10, fit / 2 - 30, 0, 0],
+          width: 'auto',
+        } as ContentStack,
+      ],
+    });
   }
   return createSection(result, true);
 }
