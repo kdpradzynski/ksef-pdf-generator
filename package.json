@@ -50,7 +50,9 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
+    "nconf": "^0.13.0",
     "pdfmake": "^0.2.20",
+    "vite-node": "^5.2.0",
     "xml-js": "^1.6.11"
   }
 }
