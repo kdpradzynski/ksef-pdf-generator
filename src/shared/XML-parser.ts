@@ -32,3 +32,17 @@ export function parseXML(file: File): Promise<unknown> {
     reader.readAsText(file);
   });
 }
+
+export function parseXMLStr(encodedXmlStr: string): Promise<unknown> {
+  return new Promise((resolve, reject): void => {
+    try {
+      const buffer = Buffer.from(encodedXmlStr, 'base64');
+      const xmlStr = buffer.toString('utf8');
+      const jsonDoc: Faktura = stripPrefixes(xml2js(xmlStr, { compact: true })) as Faktura;
+
+      resolve(jsonDoc);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
