@@ -497,7 +497,8 @@ export function generateQRCode(qrCode?: string): ContentQr | undefined {
   return qrCode
     ? {
         qr: qrCode,
-        fit: 150,
+        // fit: 150,
+        fit: 183, // poniżej 183 kod qr 'CERTYFIKAT' jest mniejszy od 'OFFLINE'
         foreground: 'black',
         background: 'white',
         eccLevel: 'M',
