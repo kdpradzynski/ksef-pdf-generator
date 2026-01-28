@@ -1,6 +1,6 @@
 import pdfMake, { TCreatedPdf } from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { generateStyle } from '../shared/PDF-functions';
 
 import { generateDaneKontrahentow } from './generators/potwierdzenie-transakcji/DaneKontrahentow';
@@ -9,26 +9,34 @@ import { generatePodsumowanie } from './generators/potwierdzenie-transakcji/Pods
 import { generateStopka } from './generators/potwierdzenie-transakcji/Stopka';
 import { generateWeryfikacja } from './generators/potwierdzenie-transakcji/Weryfikacja';
 import { AdditionalDataTypes } from './types/common.types';
-import { Fa as Fa1 } from './types/fa1.types';
-import { Fa as Fa2 } from './types/fa2.types';
-import { Fa as Fa3 } from './types/fa3.types';
+import { Faktura as Faktura3 } from './types/fa3.types';
+import { parseXML } from '../shared/XML-parser';
 
 pdfMake.vfs = pdfFonts.vfs;
 
-export function generatePotwierdzenieTransakcji(
-  fa: Fa2 | Fa3 | Fa1,
+export async function generatePotwierdzenieTransakcji(
+  file: File,
   additionalData: AdditionalDataTypes
-): TCreatedPdf {
+): Promise<Blob> {
+  const xml: unknown = await parseXML(file);
+  const faktura: Faktura3 = (xml as any).Faktura as Faktura3;
+
   const docDefinition: TDocumentDefinitions = {
     content: [
-      ...generateNaglowek(fa),
-      ...generateDaneKontrahentow(),
-      generatePodsumowanie(),
-      ...generateWeryfikacja(),
+      ...generateNaglowek(faktura.Fa),
+      ...generateDaneKontrahentow(faktura.Podmiot1, faktura.Podmiot2),
+      generatePodsumowanie(faktura.Fa?.P_15),
+      ...generateWeryfikacja(additionalData),
       generateStopka(),
     ],
     ...generateStyle(),
   };
 
-  return pdfMake.createPdf(docDefinition);
+  return new Promise((resolve) => {
+    const pdf: TCreatedPdf = pdfMake.createPdf(docDefinition);
+
+    pdf.getBlob((blob: Blob) => {
+      resolve(blob);
+    });
+  });
 }

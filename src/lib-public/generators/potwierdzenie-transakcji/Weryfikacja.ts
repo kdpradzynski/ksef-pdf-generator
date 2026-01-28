@@ -1,5 +1,6 @@
 import { Content } from 'pdfmake/interfaces';
+import { AdditionalDataTypes } from '../../types/common.types';
 
-export function generateWeryfikacja(): Content[] {
+export function generateWeryfikacja(additionalData: AdditionalDataTypes): Content[] {
   return [];
 }
