@@ -6,11 +6,15 @@ import FormatTyp from '../../../shared/enums/common.enum';
 export function generateNaglowek(fa?: Fa3): Content[] {
   return [
     {
-      text: [{ text: 'POTWIERDZENIE TRANSAKCJI', bold: true, fontSize: 18 }],
+      text: [formatText('POTWIERDZENIE TRANSAKCJI', FormatTyp.HeaderPosition) as ContentText],
+      alignment: 'center',
     },
     {
-      ...(formatText('do faktury nr ', FormatTyp.ValueMedium) as ContentText),
-      ...(formatText(fa?.P_2?._text, FormatTyp.HeaderPosition) as ContentText),
+      text: [
+        formatText('do faktury nr ', FormatTyp.HeaderContent) as ContentText,
+        formatText(fa?.P_2?._text, FormatTyp.HeaderContent) as ContentText,
+      ],
+      alignment: 'center',
     },
   ];
 }

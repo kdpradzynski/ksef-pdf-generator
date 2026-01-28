@@ -11,6 +11,8 @@ import { generateWeryfikacja } from './generators/potwierdzenie-transakcji/Weryf
 import { AdditionalDataTypes } from './types/common.types';
 import { Faktura as Faktura3 } from './types/fa3.types';
 import { parseXML } from '../shared/XML-parser';
+import { generateTest } from './generators/potwierdzenie-transakcji/Test';
+import { generatePodmioty } from './generators/potwierdzenie-transakcji/Podmioty';
 
 pdfMake.vfs = pdfFonts.vfs;
 
@@ -24,10 +26,11 @@ export async function generatePotwierdzenieTransakcji(
   const docDefinition: TDocumentDefinitions = {
     content: [
       ...generateNaglowek(faktura.Fa),
-      ...generateDaneKontrahentow(faktura.Podmiot1, faktura.Podmiot2),
-      generatePodsumowanie(faktura.Fa?.P_15),
-      ...generateWeryfikacja(additionalData),
+      ...generatePodmioty(faktura),
+      // generatePodsumowanie(faktura.Fa?.P_15),
+      // ...generateWeryfikacja(additionalData),
       generateStopka(),
+      generateTest(),
     ],
     ...generateStyle(),
   };
