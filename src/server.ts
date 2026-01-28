@@ -1,5 +1,5 @@
 import http, { IncomingHttpHeaders } from 'node:http';
-import { generateInvoiceString, generatePDFUPOString } from './lib-public';
+import { generateInvoiceString, generateUpoString, generateConfirmationString } from './lib-public';
 import { AdditionalDataTypes } from './lib-public/types/common.types';
 import nconf from 'nconf';
 
@@ -42,7 +42,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (req.method === 'POST' && req.url === '/xml-input') {
+  if (req.method === 'POST' && req.url === '/fa') {
     try {
       const body: string = await readBody(req);
       const bodyJSON = JSON.parse(body);
@@ -64,14 +64,32 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (req.method === 'POST' && req.url === '/xml-input-upo') {
+  if (req.method === 'POST' && req.url === '/upo') {
     try {
       const body: string = await readBody(req);
-      const upoPdf: Blob = await generatePDFUPOString(body);
+      const upoPdf: Blob = await generateUpoString(body);
       const buffer = Buffer.from(await upoPdf.arrayBuffer());
       const upoData = buffer.toString('base64');
 
       sendJSON(res, { upoData });
+    } catch (error: any) {
+      sendJSON(res, { error: error.message }, 400);
+    }
+    return;
+  }
+
+  if (req.method === 'POST' && req.url === '/confirmation') {
+    try {
+      const body: string = await readBody(req);
+      const bodyJSON = JSON.parse(body);
+      const xml: string = bodyJSON.xml;
+      const additionalData: AdditionalDataTypes = bodyJSON.additionalData;
+
+      const confirmationString: Blob = await generateConfirmationString(xml, additionalData);
+      const buffer = Buffer.from(await confirmationString.arrayBuffer());
+      const confirmationData = buffer.toString('base64');
+
+      sendJSON(res, { confirmationData });
     } catch (error: any) {
       sendJSON(res, { error: error.message }, 400);
     }

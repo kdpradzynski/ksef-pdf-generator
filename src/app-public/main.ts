@@ -1,4 +1,4 @@
-import { generateInvoice, generatePDFUPO, generatePotwierdzenieTransakcji } from '../lib-public';
+import { generateInvoice, generatePDFUPO, generateConfirmationPDF } from '../lib-public';
 
 import { AdditionalDataTypes } from '../lib-public/types/common.types';
 
@@ -101,7 +101,7 @@ xmlInputPotwierdzenieTransakcji.addEventListener('change', async (): Promise<voi
       'aHR0cHM6Ly9xci10ZXN0LmtzZWYubWYuZ292LnBsL2NlcnRpZmljYXRlL05pcC81NTUyMTQyNTQ1LzU1NTIxNDI1NDUvMDE5YmRlY2RkM2RlNTE2Ny9DRFRFankyRVo4emtjSVRnN09NeTE0Yi0wVUhzS0c4eVhLdUkyR3VWWkN3L01FUUNJRFpOZi1MeEpzM2tBZjRqN0l1dV9FUDlXNnd3bDJKTFNfMWVzVG5VSDlMSEFpQWlKdXhsX0hzSXFBYlM4UWdDUVJvVkVxVjhfZVVWRGhkYkM5SDVIcDAtSlE',
   };
 
-  generatePotwierdzenieTransakcji(file, additionalData).then((data: Blob): void => {
+  generateConfirmationPDF(file, additionalData).then((data: Blob): void => {
     const url: string = URL.createObjectURL(data);
 
     const a: HTMLAnchorElement = document.createElement('a');

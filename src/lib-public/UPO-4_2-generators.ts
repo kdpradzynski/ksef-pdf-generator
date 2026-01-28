@@ -34,8 +34,7 @@ export async function generatePDFUPO(file: File): Promise<Blob> {
   });
 }
 
-
-export async function generatePDFUPOString(xmlString: string): Promise<Blob> {
+export async function generateUpoString(xmlString: string): Promise<Blob> {
   const upo = (await parseXMLStr(xmlString)) as Upo;
   const docDefinition: TDocumentDefinitions = {
     content: [generateNaglowekUPO(upo.Potwierdzenie!), generateDokumnetUPO(upo.Potwierdzenie!)],
