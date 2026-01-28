@@ -26,8 +26,8 @@ export async function generatePotwierdzenieTransakcji(
   const docDefinition: TDocumentDefinitions = {
     content: [
       ...generateNaglowek(faktura.Fa),
-      ...generatePodmioty(faktura),
-      // generatePodsumowanie(faktura.Fa?.P_15),
+      // ...generatePodmioty(faktura),
+      ...generatePodsumowanie(faktura.Fa?.P_15),
       // ...generateWeryfikacja(additionalData),
       generateStopka(),
       generateTest(),
