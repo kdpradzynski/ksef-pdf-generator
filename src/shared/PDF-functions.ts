@@ -17,7 +17,7 @@ import {
   TStawkaPodatku_FA2,
   TStawkaPodatku_FA3,
 } from './consts/const';
-import {formatDateTime, formatTime, getFormaPlatnosciString} from './generators/common/functions';
+import { formatDateTime, formatTime, getFormaPlatnosciString } from './generators/common/functions';
 import { HeaderDefine, PdfFP, PdfOptionField } from './types/pdf-types';
 import { FP } from '../lib-public/types/fa3.types';
 import { DifferentValues, FilteredKeysOfValues, TypesOfValues } from './types/universal.types';
@@ -485,6 +485,23 @@ export function generateTwoColumns(kol1: Column, kol2: Column, margin?: Margins)
 export function generateColumns(contents: Content[][], style: Style | undefined = undefined): Content {
   const width: string = (100 / contents.length).toFixed(0) + '%';
   const columns: Column = contents.map((content: Content[]) => ({ stack: content, width }));
+  const columnStyle: Style = style ? { ...style } : { columnGap: 20 };
+
+  return {
+    columns,
+    ...columnStyle,
+  };
+}
+
+export function generateColumnsWithWidths(
+  contents: Content[][],
+  style: Style | undefined = undefined,
+  widths: string[]
+): Content {
+  const columns: Column = contents.map((content: Content[], index) => ({
+    stack: content,
+    width: widths[index],
+  }));
   const columnStyle: Style = style ? { ...style } : { columnGap: 20 };
 
   return {
