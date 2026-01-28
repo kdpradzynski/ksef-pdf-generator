@@ -12,6 +12,7 @@ export function generatePodsumowanie(kwotaNaleznosciOgolem?: FP): Content[] {
       ],
       alignment: 'center',
       fontSize: 12,
+      margin: [0, 16, 0, 0],
     },
   ];
 }

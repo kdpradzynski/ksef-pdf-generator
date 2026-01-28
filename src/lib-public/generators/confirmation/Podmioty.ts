@@ -9,14 +9,26 @@ export function generatePodmioty(invoice: Faktura3): Content[] {
   const daneSprzedawcy: Podmiot1 = getTable(invoice.Podmiot1)[0];
   const daneNabywcy: Podmiot2 = getTable(invoice.Podmiot2)[0];
 
-  console.log(daneSprzedawcy);
-  console.log(daneNabywcy);
+  // todo wyrównanie kolumny nabywcy do prawej
   result.push([
     generateColumns([generateDaneSprzedawcy(daneSprzedawcy), generateDaneNabywcy(daneNabywcy)], {
       margin: [0, 0, 0, 8],
       columnGap: 20,
     }),
   ]);
+
+  // const width = '50%';
+  //
+  // result.push([
+  //   generateColumnsWithWidths(
+  //     [generateDaneSprzedawcy(daneSprzedawcy), [], generateDaneNabywcy(daneNabywcy)],
+  //     {
+  //       margin: [0, 0, 0, 8],
+  //       columnGap: 20,
+  //     },
+  //     [width, '*', width]
+  //   ),
+  // ]);
 
   return createSection(result, false, [0, 0, 0, 0]);
 }

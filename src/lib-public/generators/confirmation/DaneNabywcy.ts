@@ -1,56 +1,47 @@
-import { Content } from 'pdfmake/interfaces';
-import { createHeader } from '../../../shared/PDF-functions';
-// import { createHeader, createLabelText, formatText, getTable } from '../../../shared/PDF-functions';
-// import FormatTyp from '../../../shared/enums/common.enum';
+import { Content, ContentText } from 'pdfmake/interfaces';
+import { createHeader, formatText } from '../../../shared/PDF-functions';
 import { Podmiot2 } from '../../types/fa3.types';
-// import { generateAdres } from './Adres';
-// import { generateDaneIdentyfikacyjneTPodmiot2Dto } from './PodmiotDaneIdentyfikacyjneTPodmiot2Dto';
-// import { generateDaneKontaktowe } from './PodmiotDaneKontaktowe';
-// import { DaneIdentyfikacyjneTPodmiot2Dto } from '../../types/fa2-additional-types';
+import FormatTyp from '../../../shared/enums/common.enum';
 
 export function generateDaneNabywcy(daneNabywcy: Podmiot2): Content[] {
-  const result: Content[] = createHeader('Dane nabywcy');
+  const result: Content[] = createHeader('Dane nabywcy', [0, 8, 0, 0]);
 
-  // result.push(
-  //   createLabelText('Identyfikator nabywcy: ', podmiot2.IDNabywcy),
-  //   createLabelText('Numer EORI: ', podmiot2.NrEORI)
-  // );
-  // if (podmiot2.DaneIdentyfikacyjne) {
-  //   result.push(
-  //     ...generateDaneIdentyfikacyjneTPodmiot2Dto(
-  //       podmiot2.DaneIdentyfikacyjne as DaneIdentyfikacyjneTPodmiot2Dto
-  //     )
-  //   );
-  // }
-  //
-  // if (podmiot2.Adres) {
-  //   result.push(formatText('Adres', [FormatTyp.Label, FormatTyp.LabelMargin]), generateAdres(podmiot2.Adres));
-  // }
-  // if (podmiot2.AdresKoresp) {
-  //   result.push(
-  //     formatText('Adres do korespondencji', [FormatTyp.Label, FormatTyp.LabelMargin]),
-  //     ...generateAdres(podmiot2.AdresKoresp)
-  //   );
-  // }
-  // if (podmiot2.DaneKontaktowe || podmiot2.NrKlienta) {
-  //   result.push(
-  //     formatText('Dane kontaktowe', [FormatTyp.Label, FormatTyp.LabelMargin]),
-  //     ...generateDaneKontaktowe(podmiot2.DaneKontaktowe ?? []),
-  //     createLabelText('Numer klienta: ', podmiot2.NrKlienta)
-  //   );
-  //
-  //   const daneKontaktowe = getTable(podmiot2.DaneKontaktowe);
-  //
-  //   if (daneKontaktowe.length) {
-  //     createLabelText(
-  //       'Faktura dotyczy jednostki podrzędnej JST: ',
-  //       daneKontaktowe[0].JST?._text === '1' ? 'TAK' : 'NIE'
-  //     );
-  //     createLabelText(
-  //       'Faktura dotyczy członka grupy GV: ',
-  //       daneKontaktowe[0].GV?._text === '1' ? 'TAK' : 'NIE'
-  //     );
-  //   }
-  // }
+  if (daneNabywcy.DaneIdentyfikacyjne) {
+    result.push(
+      {
+        text: [
+          formatText('NIP: ', FormatTyp.HeaderContent),
+          formatText(daneNabywcy.DaneIdentyfikacyjne.NIP?._text, null, { fontSize: 10 }) as ContentText,
+        ],
+      },
+      {
+        text: [
+          formatText('Nazwa: ', FormatTyp.HeaderContent),
+          formatText(daneNabywcy.DaneIdentyfikacyjne.Nazwa?._text, null, { fontSize: 10 }) as ContentText,
+        ],
+      }
+    );
+  }
+
+  if (daneNabywcy.Adres && (daneNabywcy.Adres.AdresL1 || daneNabywcy.Adres.AdresL2)) {
+    const line1 = daneNabywcy.Adres.AdresL1 ?? daneNabywcy.Adres.AdresL2;
+    const line2 = daneNabywcy.Adres.AdresL1 ? daneNabywcy.Adres.AdresL2 : undefined;
+    const body = [
+      [
+        formatText('Adres: ', FormatTyp.HeaderContent),
+        formatText(line1!._text, null, { fontSize: 10 }) as ContentText,
+      ],
+    ];
+
+    if (line2) {
+      body.push(['', formatText(line2._text!, null, { fontSize: 10 }) as ContentText]);
+    }
+    result.push({
+      table: {
+        body,
+      },
+      layout: 'noBorders',
+    });
+  }
   return result;
 }
