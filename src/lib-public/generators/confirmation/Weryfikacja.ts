@@ -15,19 +15,18 @@ export function generateWeryfikacja(additionalData: AdditionalDataTypes): Conten
         makeQrCodeSection(certyfikatLabel, additionalData.encodedCertyfikatURL!),
       ],
       {
-        margin: [0, 0, 0, 8],
         columnGap: 20,
       }
     ),
   ]);
-  return createSection(result, false, [0, 0, 0, 0]);
+  return createSection(result, false, [0, 16, 0, 0]);
 }
 
 function makeQrCodeSection(label: string, encodedURL: string): Content[] {
   const plainTextUrl = atob(encodedURL!);
-  const plainTextUrlQrCode: ContentQr | undefined = generateQRCode(plainTextUrl);
+  const qrCode: ContentQr | undefined = generateQRCode(plainTextUrl);
 
-  if (!plainTextUrlQrCode) {
+  if (!qrCode) {
     return [];
   }
 
@@ -38,7 +37,7 @@ function makeQrCodeSection(label: string, encodedURL: string): Content[] {
       margin: [0, 8, 8, 8],
       fontSize: label.length <= 10 ? 14 : 10,
     } as ContentStack,
-    plainTextUrlQrCode,
+    qrCode,
     {
       stack: [formatText(plainTextUrl, FormatTyp.Link)],
       link: plainTextUrl,

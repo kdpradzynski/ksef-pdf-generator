@@ -10,5 +10,6 @@ export function generateStopka(): Content {
       { text: '-Faktur', bold: true, fontSize },
     ],
     alignment: 'center',
+    marginTop: 16,
   };
 }

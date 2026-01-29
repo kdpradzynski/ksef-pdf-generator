@@ -28,7 +28,7 @@ export function generateDaneNabywcy(daneNabywcy: Podmiot2): Content[] {
     const line2 = daneNabywcy.Adres.AdresL1 ? daneNabywcy.Adres.AdresL2 : undefined;
     const body = [
       [
-        formatText('Adres: ', FormatTyp.HeaderContent),
+        formatText('Adres:', FormatTyp.HeaderContent),
         formatText(line1!._text, null, { fontSize: 10 }) as ContentText,
       ],
     ];
@@ -40,7 +40,14 @@ export function generateDaneNabywcy(daneNabywcy: Podmiot2): Content[] {
       table: {
         body,
       },
-      layout: 'noBorders',
+      layout: {
+        hLineWidth: () => 0,
+        vLineWidth: () => 0,
+        paddingTop: () => 0,
+        paddingRight: () => 3, // odstęp za 'Adres:', bo pdfmake obcina whitespace w tabeli
+        paddingBottom: () => 0,
+        paddingLeft: () => 0,
+      },
     });
   }
   return result;

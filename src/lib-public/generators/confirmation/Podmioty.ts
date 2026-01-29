@@ -30,5 +30,5 @@ export function generatePodmioty(invoice: Faktura3): Content[] {
   //   ),
   // ]);
 
-  return createSection(result, false, [0, 0, 0, 0]);
+  return createSection(result, false, [0, 16, 0, 0]);
 }
