@@ -85,6 +85,11 @@ const server = http.createServer(async (req, res) => {
       const xml: string = bodyJSON.xml;
       const additionalData: AdditionalDataTypes = bodyJSON.additionalData;
 
+      if (!additionalData.encodedFakturaURL || !additionalData.encodedCertyfikatURL) {
+        sendJSON(res, { error: 'Brak kodu QR' }, 400);
+        return;
+      }
+
       const confirmationString: Blob = await generateConfirmationString(xml, additionalData);
       const buffer = Buffer.from(await confirmationString.arrayBuffer());
       const confirmationData = buffer.toString('base64');

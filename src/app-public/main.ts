@@ -5,7 +5,7 @@ import { AdditionalDataTypes } from '../lib-public/types/common.types';
 const inputInvoice: HTMLInputElement = document.getElementById('xmlInput') as HTMLInputElement;
 const inputInvoiceOffline: HTMLInputElement = document.getElementById('xmlInputOffline') as HTMLInputElement;
 const inputUPO: HTMLInputElement = document.getElementById('xmlInputUPO') as HTMLInputElement;
-const xmlInputPotwierdzenieTransakcji: HTMLInputElement = document.getElementById(
+const inputPotwierdzenieTransakcji: HTMLInputElement = document.getElementById(
   'xmlInputPotwierdzenieTransakcji'
 ) as HTMLInputElement;
 
@@ -38,7 +38,7 @@ inputInvoice.addEventListener('change', async (): Promise<void> => {
 });
 
 inputInvoiceOffline.addEventListener('change', async (): Promise<void> => {
-  const file: File | undefined = inputInvoice.files?.[0];
+  const file: File | undefined = inputInvoiceOffline.files?.[0];
 
   if (!file) {
     return;
@@ -87,8 +87,8 @@ inputUPO.addEventListener('change', async (): Promise<void> => {
   });
 });
 
-xmlInputPotwierdzenieTransakcji.addEventListener('change', async (): Promise<void> => {
-  const file: File | undefined = inputInvoice.files?.[0];
+inputPotwierdzenieTransakcji.addEventListener('change', async (): Promise<void> => {
+  const file: File | undefined = inputPotwierdzenieTransakcji.files?.[0];
 
   if (!file) {
     return;
