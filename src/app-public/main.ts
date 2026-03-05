@@ -20,6 +20,8 @@ inputInvoice.addEventListener('change', async (): Promise<void> => {
     nrKSeF: '5555555555-20250808-9231003CA67B-BE',
     qrCode:
       'https://ksef-test.mf.gov.pl/invoice/5265877635/26-10-2025/HS5E1zrA8WVjDNq_xMVIN5SD6nyRymmQ-BcYHReUAa0',
+    encodedFakturaURL:
+      'aHR0cHM6Ly9rc2VmLXRlc3QubWYuZ292LnBsL2ludm9pY2UvNTI2NTg3NzYzNS8zMC0xMC0yMDI1L0hTNUUxenJBOFdWakROcV94TVZJTjVTRDZueVJ5bW1RLUJjWUhSZVVBYTA',
   };
 
   generateInvoice(file, additionalData, 'blob').then((data: Blob): void => {
@@ -46,7 +48,7 @@ inputInvoiceOffline.addEventListener('change', async (): Promise<void> => {
 
   const additionalData: AdditionalDataTypes = {
     encodedFakturaURL:
-      'aHR0cHM6Ly9rc2VmLXRlc3QubWYuZ292LnBsL2NsaWVudC1hcHAvaW52b2ljZS81MjY1ODc3NjM1LzI2LTEwLTIwMjUvSFM1RTF6ckE4V1ZqRE5xX3hNVklONVNENm55UnltbVEtQmNZSFJlVUFhMA',
+      'aHR0cHM6Ly9rc2VmLXRlc3QubWYuZ292LnBsL2ludm9pY2UvNTI2NTg3NzYzNS8zMC0xMC0yMDI1L0hTNUUxenJBOFdWakROcV94TVZJTjVTRDZueVJ5bW1RLUJjWUhSZVVBYTA',
     encodedCertyfikatURL:
       'aHR0cHM6Ly9xci10ZXN0LmtzZWYubWYuZ292LnBsL2NlcnRpZmljYXRlL05pcC81NTUyMTQyNTQ1LzU1NTIxNDI1NDUvMDE5YmRlY2RkM2RlNTE2Ny9DRFRFankyRVo4emtjSVRnN09NeTE0Yi0wVUhzS0c4eVhLdUkyR3VWWkN3L01FUUNJRFpOZi1MeEpzM2tBZjRqN0l1dV9FUDlXNnd3bDJKTFNfMWVzVG5VSDlMSEFpQWlKdXhsX0hzSXFBYlM4UWdDUVJvVkVxVjhfZVVWRGhkYkM5SDVIcDAtSlE',
   };
