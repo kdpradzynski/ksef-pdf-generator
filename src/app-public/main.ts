@@ -20,6 +20,8 @@ inputInvoice.addEventListener('change', async (): Promise<void> => {
     nrKSeF: '5555555555-20250808-9231003CA67B-BE',
     qrCode:
       'https://ksef-test.mf.gov.pl/invoice/5265877635/26-10-2025/HS5E1zrA8WVjDNq_xMVIN5SD6nyRymmQ-BcYHReUAa0',
+    qr2Code:
+      'https://ksef-test.mf.gov.pl/invoice/5265877635/26-10-2025/HS5E1zrA8WVjDNq_xMVIN5SD6nyRymmQ-BcYHReUAa0',
     encodedFakturaURL:
       'aHR0cHM6Ly9rc2VmLXRlc3QubWYuZ292LnBsL2ludm9pY2UvNTI2NTg3NzYzNS8zMC0xMC0yMDI1L0hTNUUxenJBOFdWakROcV94TVZJTjVTRDZueVJ5bW1RLUJjWUhSZVVBYTA',
   };
