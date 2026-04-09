@@ -34,7 +34,13 @@ export function parseXMLStr(encodedXmlStr: string): Promise<unknown> {
     try {
       const buffer = Buffer.from(encodedXmlStr, 'base64');
       const xmlStr = buffer.toString('utf8');
-      const jsonDoc: Faktura = stripPrefixes(xml2js(xmlStr, { compact: true })) as Faktura;
+      const jsonDoc: Faktura = xml2js(xmlStr, {
+        compact: true,
+        cdataKey: '_text',
+        trim: true,
+        elementNameFn: stripPrefix,
+        attributeNameFn: stripPrefix,
+      }) as Faktura;
 
       resolve(jsonDoc);
     } catch (error) {
