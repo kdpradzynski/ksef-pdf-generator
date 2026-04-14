@@ -8,17 +8,12 @@ export function generateWeryfikacja(additionalData: AdditionalDataTypes): Conten
   const certyfikatLabel = 'Zweryfikuj wystawcę faktury:';
   const result: Content[] = [];
 
-  result.push([
-    generateColumns(
-      [
-        makeQrCodeSection(fakturaLabel, additionalData.encodedFakturaURL!),
-        makeQrCodeSection(certyfikatLabel, additionalData.encodedCertyfikatURL!),
-      ],
-      {
-        columnGap: 20,
-      }
-    ),
-  ]);
+  const columns = [makeQrCodeSection(fakturaLabel, additionalData.encodedFakturaURL!)];
+
+  if (!additionalData.nrKSeF && !!additionalData.encodedCertyfikatURL) {
+    columns.push(makeQrCodeSection(certyfikatLabel, additionalData.encodedCertyfikatURL!));
+  }
+  result.push([generateColumns(columns, { columnGap: 20 })]);
   return createSection(result, false, [0, 16, 0, 0]);
 }
 

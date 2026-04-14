@@ -85,8 +85,12 @@ const server = http.createServer(async (req, res) => {
       const xml: string = bodyJSON.xml;
       const additionalData: AdditionalDataTypes = bodyJSON.additionalData;
 
-      if (!additionalData.encodedFakturaURL || !additionalData.encodedCertyfikatURL) {
-        sendJSON(res, { error: 'Brak kodu QR' }, 400);
+      if (!additionalData.encodedFakturaURL) {
+        sendJSON(res, { error: 'Brak kodu QR faktury' }, 400);
+        return;
+      }
+      if (!additionalData.nrKSeF && !additionalData.encodedCertyfikatURL) {
+        sendJSON(res, { error: 'Brak numeru faktury KSeF oraz kodu QR wystawcy faktury' }, 400);
         return;
       }
 
