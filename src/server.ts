@@ -51,7 +51,7 @@ const server = http.createServer(async (req, res) => {
       const { nrKSeF, encodedFakturaURL, encodedCertyfikatURL } = additionalData;
 
       if (!encodedFakturaURL || (!nrKSeF && !encodedCertyfikatURL)) {
-        sendJSON(res, { error: 'Brak kodu QR' }, 400);
+        sendJSON(res, { error: 'Brak numeru faktury KSeF oraz kodu QR wystawcy faktury' }, 400);
         return;
       }
 
