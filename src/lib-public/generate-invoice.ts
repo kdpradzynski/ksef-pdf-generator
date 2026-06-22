@@ -75,20 +75,24 @@ export async function generateInvoiceString(
 
   let pdf: TCreatedPdf;
 
-  return new Promise((resolve): void => {
-    switch (wersja) {
-      case 'FA (1)':
-        pdf = generateFA1((xml as any).Faktura as Faktura1, additionalData);
-        break;
-      case 'FA (2)':
-        pdf = generateFA2((xml as any).Faktura as Faktura2, additionalData);
-        break;
-      case 'FA (3)':
-        pdf = generateFA3((xml as any).Faktura as Faktura3, additionalData);
-        break;
-    }
-    pdf.getBase64((base64: string): void => {
-      resolve(base64);
-    });
-  });
+  await i18nReady;
+
+  switch (wersja) {
+    case 'FA (1)':
+      pdf = generateFA1((xml as any).Faktura as Faktura1, additionalData);
+      break;
+    case 'FA (2)':
+      pdf = generateFA2((xml as any).Faktura as Faktura2, additionalData);
+      break;
+    case 'FA (3)':
+      pdf = generateFA3((xml as any).Faktura as Faktura3, additionalData);
+      break;
+    case 'FA_RR (1)':
+    case 'FA_RR(1)':
+      pdf = generateFARR((xml as any).Faktura as FaRR, additionalData);
+      break;
+    default:
+      throw new Error(`Unknown XML Version: ${wersja}`);
+  }
+  return pdf.getBase64();
 }

@@ -9,6 +9,7 @@ Biblioteka do generowania wizualizacji PDF faktur oraz UPO na podstawie plików 
     Biblioteka zawiera następujące funkcjonalności:
     - Generowanie wizualizacji PDF faktur
     - Generowanie wizualizacji PDF UPO
+    - Generowanie potwierdzeń transakcji
 
 ---
 

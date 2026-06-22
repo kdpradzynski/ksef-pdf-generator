@@ -1,5 +1,4 @@
-import pdfMake, { TCreatedPdf } from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+import pdfMake from 'pdfmake/build/pdfmake';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { generateStyle } from '../shared/PDF-functions';
 
@@ -11,8 +10,6 @@ import { AdditionalDataTypes } from './types/common.types';
 import { Faktura as Faktura3 } from './types/fa3.types';
 import { parseXML, parseXMLStr } from '../shared/XML-parser';
 import { generatePodmioty } from './generators/confirmation/Podmioty';
-
-pdfMake.vfs = pdfFonts.vfs;
 
 export async function generateConfirmationPDF(
   file: File,
@@ -46,15 +43,5 @@ function generate(xml: unknown, additionalData: AdditionalDataTypes): Promise<Bl
     ...generateStyle(),
   };
 
-  return new Promise((resolve, reject) => {
-    const pdf: TCreatedPdf = pdfMake.createPdf(docDefinition);
-
-    pdf.getBlob((blob: Blob) => {
-      if (blob) {
-        resolve(blob);
-      } else {
-        reject(blob);
-      }
-    });
-  });
+  return pdfMake.createPdf(docDefinition).getBlob();
 }

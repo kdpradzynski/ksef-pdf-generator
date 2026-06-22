@@ -4,7 +4,7 @@ import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { generateStyle } from '@shared/PDF-functions';
 import { generateDokumentUPO } from './generators/UPO4_3/Dokumenty';
 import { generateNaglowekUPO } from './generators/UPO4_3/Naglowek';
-import { parseXML } from '@shared/XML-parser';
+import { parseXML, parseXMLStr } from '@shared/XML-parser';
 import { Position } from '@shared/enums/common.enum';
 import i18n from 'i18next';
 import { i18nReady } from './i18n/i18n-init';
@@ -22,6 +22,25 @@ export async function generatePDFUPO(file: File): Promise<Blob> {
     footer: function (currentPage: number, pageCount: number) {
       return {
         text: `${currentPage.toString()} ${i18n.t('invoice.footer.pagesTotal')} ${pageCount}`,
+        alignment: Position.RIGHT,
+        margin: [0, 0, 20, 0],
+      };
+    },
+  };
+
+  return pdfMake.createPdf(docDefinition).getBlob();
+}
+
+export async function generateUpoString(xmlString: string): Promise<Blob> {
+  const upo = (await parseXMLStr(xmlString)) as Upo;
+  const docDefinition: TDocumentDefinitions = {
+    content: [generateNaglowekUPO(upo.Potwierdzenie!), generateDokumentUPO(upo.Potwierdzenie!)],
+    ...generateStyle(),
+    pageSize: 'A4',
+    pageOrientation: 'landscape',
+    footer: function (currentPage: number, pageCount: number) {
+      return {
+        text: currentPage.toString() + ' z ' + pageCount,
         alignment: Position.RIGHT,
         margin: [0, 0, 20, 0],
       };
