@@ -141,8 +141,8 @@ describe('generateQRCode', () => {
 });
 
 describe('getKraj', () => {
-  it('returns country name if code exists, else returns input code', () => {
-    expect(getKraj('PL')).toBe('Polska');
+  it('returns country name translation key if code exists, else returns input code', () => {
+    expect(getKraj('PL')).toBe('const.countries.PL');
     expect(getKraj('XYZ')).toBe('XYZ');
   });
 });
@@ -186,7 +186,7 @@ describe('normalized currency separator', () => {
   it('should correctly separate bigger values with space', () => {
     const normalized = normalizeCurrencySeparator('123456789');
 
-    expect(normalized).toBe('123 456 789,00');
+    expect(normalized.replace(/\u00A0/g, ' ')).toBe('123 456 789,00');
   });
 });
 
