@@ -34,22 +34,8 @@ export function generateStopka(
   const wzty: Content[] = generateWZ(wz);
   const rejestry: Content[] = generateRejestry(stopka);
   const informacje: Content[] = generateInformacje(stopka);
-  // const qrCode: Content[] = generateQRCodeData(additionalData);
-  // const qr2Code: Content[] = generateQR2CodeData(additionalData);
-  const invoiceVarificationHint =
-    'Nie możesz zeskanować kodu z obrazka? Kliknij w link weryfikacyjny i przejdź do weryfikacji faktury!';
-  const fakturaQrCodeSection: Content[] = generateQRCodeSectionData(
-    additionalData?.encodedFakturaURL,
-    additionalData?.nrKSeF ?? 'OFFLINE',
-    invoiceVarificationHint,
-    additionalData?.nrKSeF ? 'Sprawdź, czy Twoja faktura znajduje się w KSeF!' : undefined
-  );
-
-  const certyfikatQrCodeSection: Content[] = generateQRCodeSectionData(
-    additionalData?.encodedCertyfikatURL,
-    'CERTYFIKAT',
-    'Nie możesz zeskanować kodu z obrazka? Kliknij w link weryfikacyjny i przejdź do weryfikacji certyfikatu!'
-  );
+  const qrCode: Content[] = generateQRCodeData(additionalData); // URL weryfikacji faktury
+  const qr2Code: Content[] = generateQR2CodeData(additionalData); // URL weryfikacji certyfikatu
 
   const zalaczniki: Content[] = !additionalData?.isMobile ? generateZalaczniki(zalacznik) : [];
 
@@ -61,10 +47,8 @@ export function generateStopka(
     ...rejestry,
     ...informacje,
     ...(zalaczniki.length ? zalaczniki : []),
-    // { stack: [...qrCode], unbreakable: true },
-    // { stack: [...qr2Code], unbreakable: true },
-    { stack: [...fakturaQrCodeSection], unbreakable: true },
-    { stack: [...certyfikatQrCodeSection], unbreakable: true },
+    { stack: [...qrCode], unbreakable: true },
+    { stack: [...qr2Code], unbreakable: true },
     createSection(
       [
         {
@@ -220,7 +204,7 @@ function generateQR2CodeData(additionalData?: AdditionalDataTypes): Content[] {
             stack: [
               formatText(i18n.t('invoice.qr2.description'), FormatTyp.Label),
               {
-                text: formatText(breakLongText(additionalData.qr2Code), FormatTyp.Link),
+                text: formatText(additionalData.qr2Code, FormatTyp.Link),
                 link: additionalData.qr2Code,
                 margin: [0, 5, 0, 0],
               },
@@ -232,60 +216,6 @@ function generateQR2CodeData(additionalData?: AdditionalDataTypes): Content[] {
         columnGap: 20,
       });
     }
-  }
-  return createSection(result, true);
-}
-
-function generateQRCodeSectionData(
-  encodedQrCodeLink: string | undefined,
-  qrCodeLabel: string | undefined,
-  qrCodeLinkLabel: string,
-  headerLabel?: string
-): Content[] {
-  const result: Content = [];
-
-  if (!encodedQrCodeLink) {
-    return createSection(result, true);
-  }
-
-  const qrCodeLink = atob(encodedQrCodeLink);
-  const qrCode: ContentQr | undefined = generateQRCode(qrCodeLink);
-
-  if (qrCode && qrCodeLabel) {
-    const fit = qrCode.fit ?? 120;
-
-    if (headerLabel) {
-      result.push(createHeader(headerLabel));
-    } else {
-      result.push(createHeader('', [0, 8, 0, 0]));
-    }
-    result.push({
-      columns: [
-        {
-          stack: [
-            qrCode,
-            {
-              stack: [formatText(qrCodeLabel, FormatTyp.Default)],
-              width: 'auto',
-              alignment: 'center',
-              marginRight: Math.max(0, fit / 10 - qrCodeLabel.length),
-              marginTop: 10,
-              fontSize: qrCodeLabel.length <= 10 ? 14 : 10,
-            } as ContentStack,
-          ],
-          width: 10 + fit,
-        } as ContentStack,
-        {
-          stack: [
-            formatText(qrCodeLinkLabel, FormatTyp.Value),
-            { stack: [formatText(makeBreakable(qrCodeLink), FormatTyp.Link)], marginTop: 5 },
-          ],
-          link: qrCodeLink,
-          margin: [10, fit / 2 - 30, 0, 0],
-          width: 'auto',
-        } as ContentStack,
-      ],
-    });
   }
   return createSection(result, true);
 }

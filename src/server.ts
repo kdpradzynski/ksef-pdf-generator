@@ -47,13 +47,17 @@ const server = http.createServer(async (req, res) => {
       const body: string = await readBody(req);
       const bodyJSON = JSON.parse(body);
       const xml: string = bodyJSON.xml;
-      const additionalData: AdditionalDataTypes = bodyJSON.additionalData;
-      const { nrKSeF, encodedFakturaURL, encodedCertyfikatURL } = additionalData;
+      const { nrKSeF, encodedFakturaURL, encodedCertyfikatURL } = bodyJSON.additionalData;
 
       if (!encodedFakturaURL || (!nrKSeF && !encodedCertyfikatURL)) {
         sendJSON(res, { error: 'Brak numeru faktury KSeF oraz kodu QR wystawcy faktury' }, 400);
         return;
       }
+      const additionalData: AdditionalDataTypes = {
+        nrKSeF,
+        qrCode: atob(encodedFakturaURL),
+        qr2Code: atob(encodedCertyfikatURL),
+      };
 
       const invoiceData = await generateInvoiceString(xml, additionalData);
 
@@ -83,16 +87,22 @@ const server = http.createServer(async (req, res) => {
       const body: string = await readBody(req);
       const bodyJSON = JSON.parse(body);
       const xml: string = bodyJSON.xml;
-      const additionalData: AdditionalDataTypes = bodyJSON.additionalData;
+      const { nrKSeF, encodedFakturaURL, encodedCertyfikatURL } = bodyJSON.additionalData;
 
-      if (!additionalData.encodedFakturaURL) {
+      if (!encodedFakturaURL) {
         sendJSON(res, { error: 'Brak kodu QR faktury' }, 400);
         return;
       }
-      if (!additionalData.nrKSeF && !additionalData.encodedCertyfikatURL) {
+      if (!nrKSeF && !encodedCertyfikatURL) {
         sendJSON(res, { error: 'Brak numeru faktury KSeF oraz kodu QR wystawcy faktury' }, 400);
         return;
       }
+
+      const additionalData: AdditionalDataTypes = {
+        nrKSeF,
+        qrCode: atob(encodedFakturaURL),
+        qr2Code: atob(encodedCertyfikatURL),
+      };
 
       const confirmationString: Blob = await generateConfirmationString(xml, additionalData);
       const buffer = Buffer.from(await confirmationString.arrayBuffer());
