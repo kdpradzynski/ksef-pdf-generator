@@ -53,11 +53,14 @@ const server = http.createServer(async (req, res) => {
         sendJSON(res, { error: 'Brak numeru faktury KSeF oraz kodu QR wystawcy faktury' }, 400);
         return;
       }
-      const additionalData: AdditionalDataTypes = {
-        nrKSeF,
-        qrCode: atob(encodedFakturaURL),
-        qr2Code: atob(encodedCertyfikatURL),
-      };
+      const additionalData: AdditionalDataTypes = { nrKSeF };
+
+      if (encodedFakturaURL) {
+        additionalData.qrCode = atob(encodedFakturaURL);
+      }
+      if (encodedCertyfikatURL) {
+        additionalData.qr2Code = atob(encodedCertyfikatURL);
+      }
 
       const invoiceData = await generateInvoiceString(xml, additionalData);
 
@@ -98,11 +101,14 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      const additionalData: AdditionalDataTypes = {
-        nrKSeF,
-        qrCode: atob(encodedFakturaURL),
-        qr2Code: atob(encodedCertyfikatURL),
-      };
+      const additionalData: AdditionalDataTypes = { nrKSeF };
+
+      if (encodedFakturaURL) {
+        additionalData.qrCode = atob(encodedFakturaURL);
+      }
+      if (encodedCertyfikatURL) {
+        additionalData.qr2Code = atob(encodedCertyfikatURL);
+      }
 
       const confirmationString: Blob = await generateConfirmationString(xml, additionalData);
       const buffer = Buffer.from(await confirmationString.arrayBuffer());
