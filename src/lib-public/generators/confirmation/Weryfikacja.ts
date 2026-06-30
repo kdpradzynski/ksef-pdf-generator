@@ -17,8 +17,7 @@ export function generateWeryfikacja(additionalData: AdditionalDataTypes): Conten
   return createSection(result, false, [0, 16, 0, 0]);
 }
 
-function makeQrCodeSection(label: string, encodedURL: string): Content[] {
-  const plainTextUrl = atob(encodedURL!);
+function makeQrCodeSection(label: string, plainTextUrl: string): Content[] {
   const qrCode: ContentQr | undefined = generateQRCode(plainTextUrl);
 
   if (!qrCode) {
